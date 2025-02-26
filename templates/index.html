@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommander un Film - CineReco</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1e293b; /* Darker background */
+            color: #f8f9fa; /* Light text */
+            font-family: 'Arial', sans-serif; /* Example: Change font */
+        }
+        .container { margin-top: 60px; } /* More top margin */
+        .card {
+            background-color: #334155; /* Darker card background */
+            border: 0;
+            border-radius: 0.75rem; /* More rounded corners */
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3); /* Stronger shadow */
+            padding: 25px; /* Increased padding */
+        }
+        .card-title { color: #f8f9fa; } /* Card title text color */
+        .form-label { color: #cbd5e1; } /* Form label text color */
+        .form-control, .form-select {
+            background-color: #475569; /* Darker input background */
+            color: #f8f9fa;
+            border: 1px solid #64748b; /* Darker border */
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #475569;
+            color: #f8f9fa;
+            border-color: #cbd5e1;
+            box-shadow: 0 0 0 0.25rem rgba(100, 116, 139, 0.25); /* Focus shadow */
+        }
+        .btn-primary {
+            background-color: #64748b; /* Darker primary button */
+            border-color: #64748b;
+        }
+        .btn-primary:hover {
+            background-color: #cbd5e1; /* Lighter hover color */
+            border-color: #cbd5e1;
+            color: #334155; /* Darker text on hover */
+        }
+        h1 {
+            color: #cbd5e1; /* Main title color */
+            margin-bottom: 30px; /* More margin below title */
+            font-weight: bold; /* Bold title */
+        }
+        .form-text { color: #94a3b8; } /* Form text color */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">CineReco - Système de Recommandation de Films</h1>
+        <div class="card shadow">
+            <h5 class="card-title text-center mb-4">Trouvez votre prochain film à regarder</h5>
+            <form action="/recommend" method="post" id="recommendationForm">
+                <div class="mb-3">
+                    <label for="title_select" class="form-label">**Option 1:** Choisir un film dans la liste</label>
+                    <select class="form-select" id="title_select" name="title_select">
+                        <option value="" selected>-- Sélectionner un film --</option>
+                        {% for movie_title in movie_list %}
+                            <option value="{{ movie_title }}">{{ movie_title }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="form-text">Recommandations basées sur les données complètes disponibles.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="title_input" class="form-label">**Option 2:** Entrer un titre de film</label>
+                    <input type="text" class="form-control" id="title_input" name="title_input" placeholder="Entrez le titre ici">
+                    <div class="form-text">Pour les films non listés, recommandations basées sur la description (si disponible).</div>
+                </div>
+                <input type="hidden" id="title" name="title" value="">
+                <div class="mb-3">
+                    <label for="approach" class="form-label">**Choisissez l'approche de recommandation:**</label>
+                    <select class="form-select" id="approach" name="approach">
+                        <option value="content">Basé sur le contenu</option>
+                        <option value="collaborative">Collaboratif (Utilisateur)</option>
+                        <option value="hybrid">Hybride (Contenu + Utilisateur)</option>
+                    </select>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg">Recommander des Films</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('recommendationForm').addEventListener('submit', function(event) {
+            const selectedTitle = document.getElementById('title_select').value;
+            const inputTitle = document.getElementById('title_input').value;
+            const finalTitleInput = document.getElementById('title');
+
+            if (selectedTitle) {
+                finalTitleInput.value = selectedTitle;
+            } else if (inputTitle) {
+                finalTitleInput.value = inputTitle;
+            } else {
+                alert("Veuillez choisir un film dans la liste ou entrer un titre de film.");
+                event.preventDefault();
+                return;
+            }
+        });
+    </script>
+</body>
+</html>

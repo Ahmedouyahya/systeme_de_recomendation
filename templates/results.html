@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Résultats des recommandations - CineReco</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1e293b; /* Darker background */
+            color: #f8f9fa; /* Light text */
+            font-family: 'Arial', sans-serif;
+        }
+        .container { margin-top: 60px; }
+        h1 {
+            color: #cbd5e1;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        .card {
+            background-color: #334155;
+            border: 0;
+            border-radius: 0.75rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+            margin-top: 25px; /* More margin for result cards */
+            color: #f8f9fa; /* Text color in cards */
+        }
+        .card-header {
+            background-color: #475569; /* Darker header */
+            border-bottom: 1px solid #64748b; /* Darker border */
+            padding: 15px 25px; /* Header padding */
+            border-radius: 0.75rem 0.75rem 0 0; /* Rounded top corners */
+            font-weight: bold;
+        }
+        .card-body {
+            padding: 25px; /* Body padding */
+        }
+        .list-group-item {
+            background-color: #475569; /* Darker list items */
+            border-color: #64748b;
+            color: #f8f9fa;
+            border-radius: 0.5rem; /* Rounded list items */
+            margin-bottom: 8px; /* Spacing between list items */
+            padding: 12px 20px; /* Padding in list items */
+        }
+        .alert-danger {
+            background-color: #7c3a3a; /* Darker red alert */
+            color: #f8f9fa;
+            border-color: #991b1b;
+            border-radius: 0.75rem;
+            padding: 20px;
+        }
+        .btn-secondary {
+            background-color: #64748b;
+            border-color: #64748b;
+        }
+        .btn-secondary:hover {
+            background-color: #cbd5e1;
+            border-color: #cbd5e1;
+            color: #334155;
+        }
+        .recommendation-card { /* Style for individual recommendation cards */
+            margin-bottom: 15px;
+        }
+        .recommendation-card .card-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .recommendation-title {
+            flex-grow: 1; /* Title takes up available space */
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        .recommendation-score {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">CineReco - Résultats de Recommandation</h1>
+        {% if result.error %}
+            <div class="alert alert-danger" role="alert">
+                Erreur : {{ result.error }}
+            </div>
+        {% else %}
+            <div class="card">
+                <div class="card-header">
+                    Approche utilisée : <strong>{{ result.approach }}</strong>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Film recherché : {{ result.searched_title }}</h5>
+                    <p class="card-text">**Films Recommandés:**</p>
+                    {% if result.recommendations %}
+                        {% for rec in result.recommendations %}
+                        <div class="card recommendation-card">
+                            <div class="card-body">
+                                <h6 class="recommendation-title">{{ rec[0] }}</h6>
+                                {% if result.approach == "Content-Based" or result.approach == "Hybride" %}
+                                    <span class="recommendation-score">Taux de recommandation: {{ "%.2f"|format(rec[1]) }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item">Aucune recommandation trouvée.</li>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        <div class="mt-4 text-center">
+            <a href="/" class="btn btn-secondary btn-lg">Retour à la recherche</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
